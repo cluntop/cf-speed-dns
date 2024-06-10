@@ -44,7 +44,7 @@ def get_dns_records(name):
         records = response.json()['result']
         for record in records:
             if record['name'] == name:
-                def_info.append(record['id'])
+                def_info.append(record['dns_record_id'])
         return def_info
     else:
         print('Error fetching DNS records:', response.text)
