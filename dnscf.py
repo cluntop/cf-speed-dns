@@ -16,6 +16,7 @@ PUSHPLUS_TOKEN  =   os.environ["PUSHPLUS_TOKEN"]
 
 
 headers = {
+    'Authorization': f'Bearer {CF_API_TOKEN}',
     'X-Auth-Email': '{CF_API_EMAIL}',
     'X-Auth-Key': '{CF_API_TOKEN}',
     'Content-Type': 'application/json'
