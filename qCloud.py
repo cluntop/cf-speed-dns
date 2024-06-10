@@ -28,7 +28,7 @@ class QcloudApiv3():
         resp = client.DeleteRecord(req_model)
         resp = json.loads(resp.to_json_string())
         resp["code"] = 0
-        resp["message"] = "None"
+        resp["message"] = "none"
         return resp
 
     def get_record(self, domain: str, length: int, sub_domain: str, record_type: str):
@@ -90,7 +90,7 @@ class QcloudApiv3():
         resp = client.CreateRecord(req)
         resp = json.loads(resp.to_json_string())
         resp["code"] = 0
-        resp["message"] = "None"
+        resp["message"] = "none"
         return resp
 
     def change_record(self, domain: str, record_id: int, sub_domain: str, value: str, record_type: str = "A",
@@ -112,7 +112,7 @@ class QcloudApiv3():
         resp = client.ModifyRecord(req)
         resp = json.loads(resp.to_json_string())
         resp["code"] = 0
-        resp["message"] = "None"
+        resp["message"] = "none"
         return resp
 
     def get_domain(self, domain: str):
