@@ -6,6 +6,7 @@ import json
 
 # API 密钥
 CF_API_TOKEN    =   os.environ["CF_API_TOKEN"]
+CF_API_EMAIL    =   os.environ["CF_API_EMAIL"]
 CF_ZONE_ID      =   os.environ["CF_ZONE_ID"]
 CF_DNS_NAME     =   os.environ["CF_DNS_NAME"]
 
@@ -15,7 +16,8 @@ PUSHPLUS_TOKEN  =   os.environ["PUSHPLUS_TOKEN"]
 
 
 headers = {
-    'Authorization': 'Bearer {CF_API_TOKEN}',
+    'X-Auth-Email': '{CF_API_EMAIL}',
+    'X-Auth-Key': '{CF_API_TOKEN}',
     'Content-Type': 'application/json'
 }
 
@@ -31,7 +33,7 @@ def get_cf_speed_test_ip(timeout=10, max_retries=5):
             traceback.print_exc()
             print("get_cf_speed_test_ip Request failed (attempt {attempt + 1}/{max_retries}): {e}")
     # 如果所有尝试都失败，返回 None 或者抛出异常，根据需要进行处理
-    return None
+    return none
 
 # 获取 DNS 记录
 def get_dns_records(name):
@@ -41,7 +43,7 @@ def get_dns_records(name):
     if response.status_code == 200:
         records = response.json()['result']
         for record in records:
-            if record['name'] == cip:
+            if record['name'] == name:
                 def_info.append(record['id'])
         return def_info
     else:
