@@ -15,7 +15,7 @@ PUSHPLUS_TOKEN  =   os.environ["PUSHPLUS_TOKEN"]
 
 
 headers = {
-    'X-Auth-Email': '{CF_API_TOKEN}',
+    'Authorization': '{CF_API_TOKEN}',
     'Content-Type': 'application/json'
 }
 
@@ -49,7 +49,7 @@ def get_dns_records(name):
 
 # 更新 DNS 记录
 def update_dns_record(record_id, name, cf_ip):
-    url = f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE_ID}/dns_records/{record_id}'
+    url = f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE_ID}/dns_records/{dns_record_id}'
     data = {
         'type': 'A',
         'name': name,
