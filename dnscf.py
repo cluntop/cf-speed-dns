@@ -36,7 +36,7 @@ def get_cf_speed_test_ip(timeout=10, max_retries=5):
 # 获取 DNS 记录
 def get_dns_records(name):
     def_info = []
-    url = 'https://api.cloudflare.com/client/v4/zones/{CF_ZONE_ID}/dns_records'
+    url = 'https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records'
     response = requests.get(url, headers=headers)
     if response.status_code == 200:
         records = response.json()['result']
@@ -49,7 +49,7 @@ def get_dns_records(name):
 
 # 更新 DNS 记录
 def update_dns_record(dns_record_id, name, cf_ip):
-    url = 'https://api.cloudflare.com/client/v4/zones/{CF_ZONE_ID}/dns_records/{dns_record_id}'
+    url = 'https://api.cloudflare.com/client/v4/zones/{zone_id}/dns_records/{dns_record_id}'
     data = {
         'type': 'A',
         'name': name,
