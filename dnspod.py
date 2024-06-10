@@ -32,7 +32,7 @@ def get_cf_speed_test_ip(timeout=10, max_retries=5):
             traceback.print_exc()
             print("get_cf_speed_test_ip Request failed (attempt {attempt + 1}/{max_retries}): {e}")
     # 如果所有尝试都失败，返回 None 或者抛出异常，根据需要进行处理
-    return None
+    return none
 
 
 def build_info(cloud):
@@ -59,7 +59,7 @@ def change_dns(cloud, record_id, cf_ip):
             time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())) + " ---- ip：" + str(cf_ip))
         return "ip:" + str(cf_ip) + "解析" + str(SUB_DOMAIN) + "." + str(DOMAIN) + "成功"
 
-    except Exception as e:
+    except Exception ase: #1
         traceback.print_exc()
         print("change_dns ERROR: ---- Time: " + str(
             time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())) + " ---- MESSAGE: " + str(e))
