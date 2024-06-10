@@ -6,7 +6,6 @@ import json
 
 # API 密钥
 CF_API_TOKEN    =   os.environ["CF_API_TOKEN"]
-CF_API_EMAIL    =   os.environ["CF_API_EMAIL"]
 CF_ZONE_ID      =   os.environ["CF_ZONE_ID"]
 CF_DNS_NAME     =   os.environ["CF_DNS_NAME"]
 
@@ -16,8 +15,7 @@ PUSHPLUS_TOKEN  =   os.environ["PUSHPLUS_TOKEN"]
 
 
 headers = {
-    'X-Auth-Email': '{CF_API_EMAIL}',
-    'X-Auth-Key': '{CF_API_TOKEN}',
+    'Authorization': 'Bearer {CF_API_TOKEN}',
     'Content-Type': 'application/json'
 }
 
@@ -50,8 +48,8 @@ def get_dns_records(name):
         print('Error fetching DNS records:', response.text)
 
 # 更新 DNS 记录
-def update_dns_record(dns_record_id, name, cf_ip):
-    url = 'https://api.cloudflare.com/client/v4/zones/{CF_ZONE_ID}/dns_records/{dns_record_id}'
+def update_dns_record(record_id, name, cf_ip):
+    url = 'https://api.cloudflare.com/client/v4/zones/{CF_ZONE_ID}/dns_records/{record_id}'
     data = {
         'type': 'A',
         'name': name,
@@ -61,12 +59,12 @@ def update_dns_record(dns_record_id, name, cf_ip):
     response = requests.put(url, headers=headers, json=data)
 
     if response.status_code == 200:
-        print(f"cf_dns_change success: ---- Time: " + str(
+        print("cf_dns_change success: ---- Time: " + str(
             time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())) + " ---- ip：" + str(cf_ip))
         return "ip:" + str(cf_ip) + "解析" + str(name) + "成功"
     else:
         traceback.print_exc()
-        print(f"cf_dns_change ERROR: ---- Time: " + str(
+        print("cf_dns_change ERROR: ---- Time: " + str(
             time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())) + " ---- MESSAGE: " + str(e))
         return "ip:" + str(cf_ip) + "解析" + str(name) + "失败"
 
