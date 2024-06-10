@@ -6,6 +6,7 @@ import json
 
 # API 密钥
 CF_API_TOKEN    =   os.environ["CF_API_TOKEN"]
+CF_API_EMAIL    =   os.environ["CF_API_EMAIL"]
 CF_ZONE_ID      =   os.environ["CF_ZONE_ID"]
 CF_DNS_NAME     =   os.environ["CF_DNS_NAME"]
 
@@ -15,7 +16,8 @@ PUSHPLUS_TOKEN  =   os.environ["PUSHPLUS_TOKEN"]
 
 
 headers = {
-    'Authorization': 'Bearer {CF_API_TOKEN}',
+    'X-Auth-Email': '{CF_API_EMAIL}',
+    'X-Auth-Key': '{CF_API_TOKEN}',
     'Content-Type': 'application/json'
 }
 
