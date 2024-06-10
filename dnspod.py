@@ -30,7 +30,7 @@ def get_cf_speed_test_ip(timeout=10, max_retries=5):
                 return response.text
         except Exception as e:
             traceback.print_exc()
-            print(f"get_cf_speed_test_ip Request failed (attempt {attempt + 1}/{max_retries}): {e}")
+            print("get_cf_speed_test_ip Request failed (attempt {attempt + 1}/{max_retries}): {e}")
     # 如果所有尝试都失败，返回 None 或者抛出异常，根据需要进行处理
     return None
 
@@ -43,25 +43,25 @@ def build_info(cloud):
             info = {"recordId": record["id"], "value": record["value"]}
             if record["line"] == "默认":
                 def_info.append(info)
-        print(f"build_info success: ---- Time: " + str(
+        print("build_info success: ---- Time: " + str(
             time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())) + " ---- ip：" + str(def_info))
         return def_info
     except Exception as e:
         traceback.print_exc()
-        print(f"build_info ERROR: ---- Time: " + str(
+        print("build_info ERROR: ---- Time: " + str(
             time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())) + " ---- MESSAGE: " + str(e))
 
 
 def change_dns(cloud, record_id, cf_ip):
     try:
         cloud.change_record(DOMAIN, record_id, SUB_DOMAIN, cf_ip, "A", "默认", 600)
-        print(f"change_dns success: ---- Time: " + str(
+        print("change_dns success: ---- Time: " + str(
             time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())) + " ---- ip：" + str(cf_ip))
         return "ip:" + str(cf_ip) + "解析" + str(SUB_DOMAIN) + "." + str(DOMAIN) + "成功"
 
     except Exception as e:
         traceback.print_exc()
-        print(f"change_dns ERROR: ---- Time: " + str(
+        print("change_dns ERROR: ---- Time: " + str(
             time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())) + " ---- MESSAGE: " + str(e))
         return "ip:" + str(cf_ip) + "解析" + str(SUB_DOMAIN) + "." + str(DOMAIN) + "失败"
 
