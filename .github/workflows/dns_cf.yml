@@ -2,7 +2,7 @@ name: 'dns_cf_push'
 
 on:
   schedule:
-    - cron: '*/15 * * * *'
+    - cron: '66 */6 * * * *'
 
 jobs:
   build:
