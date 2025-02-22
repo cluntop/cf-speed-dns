@@ -53,6 +53,7 @@ def update_dns_record(record_id, name, cf_ip):
     data = {
         'type': 'A',
         'name': name,
+        'proxied': true,
         'content': cf_ip
     }
 
