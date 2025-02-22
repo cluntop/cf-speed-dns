@@ -53,11 +53,11 @@ def update_dns_record(record_id, name, cf_ip):
     data = {
         'type': 'A',
         'name': name,
-        'proxied': true,
+        'proxied': 'true',
         'content': cf_ip
     }
 
-    response = requests.put(url, headers=headers, json=data)
+    response = requests.patch(url, headers=headers, json=data)
 
     if response.status_code == 200:
         print(f"cf_dns_change success: ---- Time: " + str(
