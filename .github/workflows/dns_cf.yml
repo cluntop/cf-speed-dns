@@ -1,5 +1,9 @@
 name: 'dns_cf_push'
 
+permissions:
+  contents: read
+  actions: write
+
 on:
   schedule:
     - cron: '*/5 * * * *'
