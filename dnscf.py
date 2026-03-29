@@ -145,7 +145,10 @@ def main():
         print("错误: 无法获取优选 IP")
         return
 
-    ip_addresses = [ip.strip() for ip in ip_addresses_str.split(',') if ip.strip()]
+        raw_ips = [ip.strip() for ip in ip_addresses_str.split(',') if ip.strip()]
+    # 利用字典键的唯一性进行去重，并保持原有的优选 IP 排序
+    ip_addresses = list(dict.fromkeys(raw_ips)) 
+    
     if not ip_addresses:
         print("错误: 未解析到有效 IP 地址")
         return
