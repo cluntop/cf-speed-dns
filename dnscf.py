@@ -82,7 +82,7 @@ def update_dns_record(record_info, name, cf_ip):
         'type': 'A',
         'name': name,
         'content': cf_ip,
-        'ttl': '1'
+        'ttl': 1
     }
 
     try:
