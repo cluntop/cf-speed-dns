@@ -14,21 +14,23 @@ CF_ZONE_ID = os.environ.get("CF_ZONE_ID")
 CF_DNS_NAME = os.environ.get("CF_DNS_NAME")
 PUSHPLUS_TOKEN = os.environ.get("PUSHPLUS_TOKEN")
 
-# 请求头
-HEADERS = {
-    'Authorization': f'Bearer {CF_API_TOKEN}',
-    'Content-Type': 'application/json'
-}
-
 # 默认超时时间（秒）
 DEFAULT_TIMEOUT = 30
+
+# 创建全局 Session 以复用 TCP/TLS 连接 [1, Section: "Advanced Usage" - "Session Objects"]
+session = requests.Session()
+session.headers.update({
+    'Authorization': f'Bearer {CF_API_TOKEN}',
+    'Content-Type': 'application/json'
+})
 
 
 def get_cf_speed_test_ip(timeout=10, max_retries=5):
     
     for attempt in range(max_retries):
         try:
-            response = requests.get(
+            # 使用 session 复用连接 [1, Section: "Advanced Usage" - "Session Objects"]
+            response = session.get(
                 'https://ip.164746.xyz/ipTop.html',
                 timeout=timeout
             )
@@ -45,18 +47,23 @@ def get_dns_records(name):
     
     records = []
     url = f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE_ID}/dns_records'
+    
+    # 采用 API 侧过滤和分页 [2, Section: "DNS Records for a Zone" - "List DNS Records"]
+    params = {
+        'name': name,
+        'type': 'A',
+        'per_page': 100  # [2, Section: "Fundamentals" - "Pagination"]
+    }
 
     try:
-        response = requests.get(url, headers=HEADERS, timeout=DEFAULT_TIMEOUT)
+        response = session.get(url, params=params, timeout=DEFAULT_TIMEOUT)
         if response.status_code == 200:
             result = response.json().get('result', [])
             for record in result:
-                
-                if record.get('name') == name and record.get('type') == 'A':
-                    records.append({
-                        'id': record['id'],
-                        'content': record.get('content', '')
-                    })
+                records.append({
+                    'id': record['id'],
+                    'content': record.get('content', '')
+                })
         else:
             print(f'获取 DNS 记录失败: {response.text}')
     except Exception as e:
@@ -86,7 +93,8 @@ def update_dns_record(record_info, name, cf_ip):
     }
 
     try:
-        response = requests.put(url, headers=HEADERS, json=data, timeout=DEFAULT_TIMEOUT)
+        # 使用 session 提交数据 [1, Section: "Advanced Usage" - "Session Objects"]
+        response = session.put(url, json=data, timeout=DEFAULT_TIMEOUT)
         current_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
 
         if response.status_code == 200:
@@ -118,15 +126,14 @@ def push_plus(content):
     }
 
     try:
-        body = json.dumps(data).encode(encoding='utf-8')
-        headers = {'Content-Type': 'application/json'}
-        requests.post(url, data=body, headers=headers, timeout=DEFAULT_TIMEOUT)
+        # 简化 JSON 序列化 [1, Section: "Developer Interface" - "More complicated POST requests"]
+        session.post(url, json=data, timeout=DEFAULT_TIMEOUT)
     except Exception as e:
         print(f"消息推送失败: {e}")
 
 
 def main():
-    """主函数"""
+    
     # 检查必要的环境变量
     if not all([CF_API_TOKEN, CF_ZONE_ID, CF_DNS_NAME]):
         print("错误: 缺少必要的环境变量 (CF_API_TOKEN, CF_ZONE_ID, CF_DNS_NAME)")
