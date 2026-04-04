@@ -26,7 +26,7 @@ session.headers.update({
 
 
 def get_cf_speed_test_ip(timeout=10, max_retries=5):
-    
+
     for attempt in range(max_retries):
         try:
             # 使用 session 复用连接 [1, Section: "Advanced Usage" - "Session Objects"]
@@ -44,10 +44,10 @@ def get_cf_speed_test_ip(timeout=10, max_retries=5):
 
 
 def get_dns_records(name):
-    
+
     records = []
     url = f'https://api.cloudflare.com/client/v4/zones/{CF_ZONE_ID}/dns_records'
-    
+
     # 采用 API 侧过滤和分页 [2, Section: "DNS Records for a Zone" - "List DNS Records"]
     params = {
         'name': name,
@@ -74,7 +74,7 @@ def get_dns_records(name):
 
 
 def update_dns_record(record_info, name, cf_ip):
-    
+
     record_id = record_info['id']
     current_ip = record_info.get('content', '')
 
@@ -111,7 +111,7 @@ def update_dns_record(record_info, name, cf_ip):
 
 
 def push_plus(content):
-    
+
     if not PUSHPLUS_TOKEN:
         print("PUSHPLUS_TOKEN 未设置，跳过消息推送")
         return
@@ -133,22 +133,27 @@ def push_plus(content):
 
 
 def main():
-    
+
     # 检查必要的环境变量
     if not all([CF_API_TOKEN, CF_ZONE_ID, CF_DNS_NAME]):
         print("错误: 缺少必要的环境变量 (CF_API_TOKEN, CF_ZONE_ID, CF_DNS_NAME)")
         return
 
     # 获取最新优选 IP
-    ip_addresses_str = get_cf_speed_test_ip()
-    if not ip_addresses_str:
-        print("错误: 无法获取优选 IP")
-        return
+    raw_ips = []  # 必须在此处初始化变量
+    
+    try:
+        # 这里是原有的获取 IP 逻辑，如果失败，不会报错，直接进入 except
+        raw_ips = fetch_cloudflare_ips() 
+    except Exception as e:
+        print(f"Error fetching IPs: {e}")
+        # 建议：如果无数据则直接退出
+        return 
 
         raw_ips = [ip.strip() for ip in ip_addresses_str.split(',') if ip.strip()]
     # 利用字典键的唯一性进行去重，并保持原有的优选 IP 排序
     ip_addresses = list(dict.fromkeys(raw_ips)) 
-    
+
     if not ip_addresses:
         print("错误: 未解析到有效 IP 地址")
         return
