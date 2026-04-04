@@ -140,15 +140,12 @@ def main():
         return
 
     # 获取最新优选 IP
-    raw_ips = []  # 必须在此处初始化变量
-    
-    try:
-        # 这里是原有的获取 IP 逻辑，如果失败，不会报错，直接进入 except
-        raw_ips = fetch_cloudflare_ips() 
-    except Exception as e:
-        print(f"Error fetching IPs: {e}")
-        # 建议：如果无数据则直接退出
-        return 
+    ip_addresses_str = get_cf_speed_test_ip()
+    if not ip_addresses_str:
+        print("错误: 无法获取优选 IP")
+        return
+        
+    raw_ips = []
 
         raw_ips = [ip.strip() for ip in ip_addresses_str.split(',') if ip.strip()]
     # 利用字典键的唯一性进行去重，并保持原有的优选 IP 排序
