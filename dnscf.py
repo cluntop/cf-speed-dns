@@ -31,7 +31,7 @@ def get_cf_speed_test_ip(timeout=10, max_retries=5):
         try:
             # 使用 session 复用连接 [1, Section: "Advanced Usage" - "Session Objects"]
             response = session.get(
-                'https://ip.164746.xyz/ipTop.html',
+                'https://ip.164746.xyz/ipTop10.html',
                 timeout=timeout
             )
             if response.status_code == 200:
