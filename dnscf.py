@@ -174,10 +174,14 @@ def main():
         print("错误: 无法获取优选 IP")
         return
 
-    ip_addresses = [ip.strip() for ip in ip_addresses_str.split(',') if ip.strip()]
-    if not ip_addresses:
+    all_ips = [ip.strip() for ip in ip_addresses_str.split(',') if ip.strip()]
+    
+    if not all_ips:
         print("错误: 未解析到有效 IP 地址")
         return
+        
+    ip_addresses = [all_ips[0]]
+
 
     # 获取 DNS 记录
     dns_records = get_dns_records(CF_DNS_NAME)
